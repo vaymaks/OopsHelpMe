@@ -1,4 +1,4 @@
-package max.waitzman.oopshelpme;
+package max.waitzman.oopshelpme.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,6 +31,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import max.waitzman.oopshelpme.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
