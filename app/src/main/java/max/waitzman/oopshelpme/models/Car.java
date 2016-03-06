@@ -12,9 +12,9 @@ public class Car {
 	}
 
 	public Car(String brand, String model, int year) {
-		setBrand(brand);
-		setModel(model);
-		setYear(year);
+		this.setBrand(brand);
+		this.setModel(model);
+		this.setYear(year);
 	}
 
 	public String getBrand() {

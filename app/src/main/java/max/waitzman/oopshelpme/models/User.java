@@ -36,22 +36,33 @@ public class User {
 	private String phoneNumber ;
 	private String address;
 	private Car car;
+	private Analytics analytics;
 	private UserType userType=UserType.Regular ;
-
-
 
 	public User() {
 	}
 
-	public User(String login, String firstName, String lastName, String phoneNumber, String address, Car car , UserType userType) {
-		setLogin(login);
-		setFirstName(firstName);
-		setLastName(lastName);
-		setPhoneNumber(phoneNumber);
-		setAddress(address);
-		setCar(car);
-		setUserType(userType);
+	public User(String login, String firstName, String lastName, String phoneNumber, String address, Car car ,Analytics analytics, UserType userType) {
+		this.setLogin(login);
+		this.setFirstName(firstName);
+		this.setLastName(lastName);
+		this.setPhoneNumber(phoneNumber);
+		this.setAddress(address);
+		this.setCar(car);
+		this.setAnalytics(analytics);
+		this.setUserType(userType);
 	}
+
+	/*public User(String login, String firstName, String lastName, String phoneNumber, String address, Car car ,Analytics analytics, UserType userType) {
+		this.setLogin(login);
+		this.setFirstName(firstName);
+		this.setLastName(lastName);
+		this.setPhoneNumber(phoneNumber);
+		this.setAddress(address);
+		this.setCar(car);
+		this.setAnalytics();
+		this.setUserType(userType);
+	}*/
 
 	public String getLogin() {
 		return login;
@@ -107,6 +118,14 @@ public class User {
 
 	public void setUserType(UserType userType) {
 		this.userType = userType;
+	}
+
+	public Analytics getAnalytics() {
+		return analytics;
+	}
+
+	public void setAnalytics(Analytics analytics) {
+		this.analytics = analytics;
 	}
 
 	@Override

@@ -13,8 +13,8 @@ public class Location implements Comparator<Location>,Parcelable {
     private double longitude;
 
     public Location(double latitude, double longitude) {
-        setLatitude(latitude);
-        setLongitude(longitude);
+        this.setLatitude(latitude);
+        this.setLongitude(longitude);
     }
 
 
