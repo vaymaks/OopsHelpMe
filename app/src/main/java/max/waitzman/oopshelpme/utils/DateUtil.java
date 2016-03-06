@@ -1,4 +1,4 @@
-package envitech.platform.meteo.utils;
+package max.waitzman.oopshelpme.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
