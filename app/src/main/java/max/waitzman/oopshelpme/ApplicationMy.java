@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.multidex.MultiDexApplication;
 
+import com.firebase.client.Firebase;
+
 import max.waitzman.oopshelpme.utils.AppStartProfiles;
 
 /*import org.acra.ACRA;
@@ -15,6 +17,7 @@ import org.acra.annotation.ReportsCrashes;*/
 
 public class ApplicationMy extends MultiDexApplication {//Application
     private static Context context;
+    private static Firebase firebase;
 
     private static Context mAppContext;
     private static Handler mUIhanlder;
@@ -23,6 +26,8 @@ public class ApplicationMy extends MultiDexApplication {//Application
     @Override
     public void onCreate() {
         super.onCreate();
+        Firebase.setAndroidContext(this);
+        firebase = new Firebase(getString(R.string.firebase_url));
         /*new Runnable() {
             @Override
             public void run() {
@@ -78,6 +83,11 @@ public class ApplicationMy extends MultiDexApplication {//Application
     public static Handler getUIhanlder() {
         return mUIhanlder;
     }
+
+    public static Firebase getFirebase() {
+        return firebase;
+    }
+
 
     /*public static ApiClient getApiClient()
     {
