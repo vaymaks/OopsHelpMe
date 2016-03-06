@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.multidex.MultiDexApplication;
 
+import com.facebook.FacebookSdk;
 import com.firebase.client.Firebase;
 
 import max.waitzman.oopshelpme.utils.AppStartProfiles;
@@ -28,6 +29,7 @@ public class ApplicationMy extends MultiDexApplication {//Application
         super.onCreate();
         Firebase.setAndroidContext(this);
         firebase = new Firebase(getString(R.string.firebase_url));
+        FacebookSdk.sdkInitialize(getApplicationContext());
         /*new Runnable() {
             @Override
             public void run() {
