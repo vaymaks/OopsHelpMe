@@ -3,6 +3,8 @@ package max.waitzman.oopshelpme.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -29,9 +31,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.login.widget.LoginButton;
+import com.firebase.client.AuthData;
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import max.waitzman.oopshelpme.ApplicationMy;
 import max.waitzman.oopshelpme.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -40,6 +49,35 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+	private static final String TAG = LoginActivity.class.getSimpleName();
+	Firebase firebase;
+
+	/* TextView that is used to display information about the logged in user */
+	private TextView mLoggedInStatusTextView;
+
+
+	/* A dialog that is presented until the Firebase authentication finished. */
+	private ProgressDialog mAuthProgressDialog;
+
+	/* A reference to the Firebase */
+	private Firebase mFirebaseRef;
+
+	/* Data from the authenticated user */
+	private AuthData mAuthData;
+
+	/* Listener for Firebase session changes */
+	private Firebase.AuthStateListener mAuthStateListener;
+
+	/* *************************************
+	 *              FACEBOOK               *
+	 ***************************************/
+    /* The login button for Facebook */
+	private LoginButton mFacebookLoginButton;
+	/* The callback manager for Facebook */
+	private CallbackManager mFacebookCallbackManager;
+	/* Used to track user logging in/out off Facebook */
+	private AccessTokenTracker mFacebookAccessTokenTracker;
 
 	/**
 	 * Id to identity READ_CONTACTS permission request.
@@ -51,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 	 * TODO: remove after connecting to a real authentication system.
 	 */
 	private static final String[] DUMMY_CREDENTIALS = new String[]{
-			                                                              "foo@example.com:hello", "bar@example.com:world"
+			                                                              "foo@example.com:hello", "bar@example.com:world","max@:xxx"
 	};
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -68,6 +106,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		//firebase = new Firebase(getString(R.string.firebase_url));
+		firebase = ApplicationMy.getFirebase();
+
 		// Set up the login form.
 		mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 		populateAutoComplete();
@@ -199,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 	private boolean isPasswordValid(String password) {
 		//TODO: Replace this with your own logic
-		return password.length() > 4;
+		return password.length() >= 3;
 	}
 
 	/**
@@ -214,8 +255,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-					                                                         show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
 					mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -223,8 +263,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 			});
 
 			mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mProgressView.animate().setDuration(shortAnimTime).alpha(
-					                                                        show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+			mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
 				@Override
 				public void onAnimationEnd(Animator animation) {
 					mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -242,13 +281,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 	public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 		return new CursorLoader(this,
 				                       // Retrieve data rows for the device user's 'profile' contact.
-				                       Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-						                                           ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+				                       Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI, ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
 
 				                       // Select only email addresses.
-				                       ContactsContract.Contacts.Data.MIMETYPE +
-						                       " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-								                                            .CONTENT_ITEM_TYPE},
+				                       ContactsContract.Contacts.Data.MIMETYPE + " = ?", new String[]{ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE},
 
 				                       // Show primary email addresses first. Note that there won't be
 				                       // a primary email address if the user hasn't specified one.
@@ -274,19 +310,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 	private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
 		//Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-		ArrayAdapter<String> adapter =
-				new ArrayAdapter<>(LoginActivity.this,
-						                  android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(LoginActivity.this, android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 		mEmailView.setAdapter(adapter);
 	}
 
 
 	private interface ProfileQuery {
-		String[] PROJECTION = {
-				                      ContactsContract.CommonDataKinds.Email.ADDRESS,
-				                      ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-		};
+		String[] PROJECTION = {ContactsContract.CommonDataKinds.Email.ADDRESS, ContactsContract.CommonDataKinds.Email.IS_PRIMARY,};
 
 		int ADDRESS = 0;
 		int IS_PRIMARY = 1;
@@ -335,6 +365,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 			showProgress(false);
 
 			if (success) {
+				Intent toMainActivity = new Intent( getBaseContext(), LoginAdvancedActivity.class);
+				startActivity(toMainActivity);
 				finish();
 			} else {
 				mPasswordView.setError(getString(R.string.error_incorrect_password));

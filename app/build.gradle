@@ -5,6 +5,7 @@ android {
         exclude 'META-INF/LGPL2.1'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
     }
 
     dexOptions {
@@ -19,7 +20,7 @@ android {
     defaultConfig {
         manifestPlaceholders = [applicationName: "@string/app_name"]
         applicationId "max.waitzman.oopshelpme"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 100
         versionName "1.0.0"
@@ -83,5 +84,11 @@ dependencies {
     //compile 'com.github.PhilJay:MPAndroidChart:v2.2.2'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.firebase:firebase-client-android:2.5.2+'
+
+    compile 'com.firebaseui:firebase-ui:0.3.1'
+
+    compile 'com.facebook.android:facebook-android-sdk:4.6.0'
 
 }
