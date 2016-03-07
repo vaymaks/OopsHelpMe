@@ -27,30 +27,30 @@
     android:layout_gravity="center_horizontal"
     android:text="@string/login_with_facebook" />
 
-<com.google.android.gms.common.SignInButton
+<!--<com.google.android.gms.common.SignInButton
     android:id="@+id/login_with_google"
     android:text="@string/login_with_google"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"/>
+    android:visibility="gone"/>-->
 
-<Button
+<!--<Button
     android:id="@+id/login_with_twitter"
     android:text="@string/login_with_twitter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"/>
+    android:visibility="gone"/>-->
 
-<Button
+<!--<Button
     android:id="@+id/login_with_password"
     android:text="@string/login_with_password"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content" />-->
 
-<Button
+<!--<Button
     android:id="@+id/login_anonymously"
     android:text="@string/login_anonymously"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content" />-->
 
 </LinearLayout>
