@@ -95,15 +95,15 @@ public class BaseNavigationDrawerActivity extends AppCompatActivity
 		AuthData authData= firebase.getAuth();
 		LogUtil.e(firebase.getAuth()+"");
 		try {
-			response = new JSONObject(jsondata);
+			//response = new JSONObject(jsondata);
 			//tvUserEmail.setText(response.get("email").toString());
 			tvUserEmail.setText((String)authData.getProviderData().get("email"));
 
 			//tvUserFullName.setText(response.get("name").toString());
 			tvUserFullName.setText((String)authData.getProviderData().get("displayName"));
 
-			profile_pic_data = new JSONObject(response.get("picture").toString());
-			profile_pic_url = new JSONObject(profile_pic_data.getString("data"));
+			//profile_pic_data = new JSONObject(response.get("picture").toString());
+			//profile_pic_url = new JSONObject(profile_pic_data.getString("data"));
 
 
 			//Picasso.with(this).load(profile_pic_url.getString("url")).into(ivUserPicture);
