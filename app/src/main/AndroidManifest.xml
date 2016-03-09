@@ -49,6 +49,11 @@
             android:label="@string/title_activity_base_navigation_drawer"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".activities.RescuesActivity"
+            android:label="@string/title_activity_rescues"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

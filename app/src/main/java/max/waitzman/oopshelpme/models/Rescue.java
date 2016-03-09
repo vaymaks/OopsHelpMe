@@ -9,6 +9,8 @@ import java.util.Date;
  * Created by User7 on 06/03/2016.
  */
 public class Rescue implements Parcelable {
+	private String title;
+	private String description;
 	private Location location;
 	private Date date;
 	private User stuckUser;
@@ -17,11 +19,29 @@ public class Rescue implements Parcelable {
 	public Rescue() {
 	}
 
-	public Rescue(Location location, Date date, User stuckUser, User extractorUser) {
+	public Rescue(String title, String description, Location location, Date date, User stuckUser, User extractorUser) {
+		this.setTitle(title);
+		this.setDescription(description);
 		this.setLocation(location);
 		this.setDate(date);
 		this.setStuckUser(stuckUser);
 		this.setExtractorUser(extractorUser);
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Location getLocation() {
@@ -69,6 +89,8 @@ public class Rescue implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(this.title);
+		dest.writeString(this.description);
 		dest.writeParcelable(this.location, 0);
 		dest.writeLong(date != null ? date.getTime() : -1);
 		dest.writeParcelable(this.stuckUser, 0);
@@ -76,6 +98,8 @@ public class Rescue implements Parcelable {
 	}
 
 	protected Rescue(Parcel in) {
+		this.title = in.readString();
+		this.description = in.readString();
 		this.location = in.readParcelable(Location.class.getClassLoader());
 		long tmpDate = in.readLong();
 		this.date = tmpDate == -1 ? null : new Date(tmpDate);
@@ -83,7 +107,7 @@ public class Rescue implements Parcelable {
 		this.extractorUser = in.readParcelable(User.class.getClassLoader());
 	}
 
-	public static final Parcelable.Creator<Rescue> CREATOR = new Parcelable.Creator<Rescue>() {
+	public static final Creator<Rescue> CREATOR = new Creator<Rescue>() {
 		public Rescue createFromParcel(Parcel source) {
 			return new Rescue(source);
 		}

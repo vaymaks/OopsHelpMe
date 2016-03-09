@@ -19,8 +19,9 @@ import android.view.ViewGroup;
   
 import android.widget.TextView;
 import max.waitzman.oopshelpme.R;
+import max.waitzman.oopshelpme.fragments.RescuesListFragment;
 
-public class RescuesActivity extends AppCompatActivity {
+public class RescuesActivity extends AppCompatActivity { // BaseNavigationDrawerActivity {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -36,6 +37,28 @@ public class RescuesActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment RescuesListFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static RescuesActivity newInstance(String param1, String param2) {
+        RescuesActivity rescuesActivity = new RescuesActivity();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        //rescuesActivity.setArguments(args);
+        return rescuesActivity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +129,7 @@ public class RescuesActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            return RescuesListFragment.newInstance(position + 1);
         }
 
         @Override
@@ -132,17 +155,19 @@ public class RescuesActivity extends AppCompatActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
+    //region PlaceholderFragment
+    /*
     public static class PlaceholderFragment extends Fragment {
-        /**
+        *//**
          * The fragment argument representing the section number for this
          * fragment.
-         */
+         *//*
         private static final String ARG_SECTION_NUMBER = "section_number";
 
-        /**
+        *//**
          * Returns a new instance of this fragment for the given section
          * number.
-         */
+         *//*
         public static PlaceholderFragment newInstance(int sectionNumber) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -162,5 +187,6 @@ public class RescuesActivity extends AppCompatActivity {
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
-    }
+    }*/
+    //endregion
 }
