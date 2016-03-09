@@ -759,6 +759,10 @@ public class LoginActivity extends AppCompatActivity
 				Intent intent = new Intent(LoginActivity.this, BaseNavigationDrawerActivity.class);
 				startActivity(intent);
 				finish();
+
+				/*Intent intent = new Intent(LoginActivity.this, RescuesActivity.class);
+				startActivity(intent);
+				finish();*/
 			}
 		} else {
             /* No authenticated user show all the login buttons */
