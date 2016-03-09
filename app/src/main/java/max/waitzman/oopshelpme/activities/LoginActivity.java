@@ -466,6 +466,7 @@ public class LoginActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
         /* Load the view and display it */
 		setContentView(R.layout.activity_login_facebook);
+		LogUtil.facebookHashKey();
 
         /* *************************************
          *              FACEBOOK               *
@@ -616,6 +617,7 @@ public class LoginActivity extends AppCompatActivity
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		LogUtil.e("requestCode:"+requestCode+ " resultCode:"+ resultCode);
 		Map<String, String> options = new HashMap<String, String>();
 
 		 /* Otherwise, it's probably the request by the Facebook login button, keep track of the session */
@@ -663,6 +665,8 @@ public class LoginActivity extends AppCompatActivity
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+
 
 	/**
 	 * Unauthenticate from Firebase and from providers where necessary.
@@ -754,18 +758,7 @@ public class LoginActivity extends AppCompatActivity
 
 				Intent intent = new Intent(LoginActivity.this, BaseNavigationDrawerActivity.class);
 				startActivity(intent);
-
-				/*new CountDownTimer(6000, 1000) {
-					public void onTick(long millisUntilFinished) {
-						LogUtil.e("Seconds remaining: " + millisUntilFinished / 1000);
-					}
-
-					public void onFinish() {
-						LogUtil.e("");
-						Intent intent = new Intent(LoginActivity.this, BaseNavigationDrawerActivity.class);
-						startActivity(intent);
-					}
-				}.start();*/
+				finish();
 			}
 		} else {
             /* No authenticated user show all the login buttons */

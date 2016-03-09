@@ -1,5 +1,6 @@
 package max.waitzman.oopshelpme.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.login.LoginManager;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.squareup.picasso.Picasso;
@@ -28,7 +30,6 @@ import max.waitzman.oopshelpme.utils.LogUtil;
 public class BaseNavigationDrawerActivity extends AppCompatActivity
 		implements NavigationView.OnNavigationItemSelectedListener {
 
-	JSONObject response, profile_pic_data, profile_pic_url;
 	TextView tvUserFullName, tvUserEmail;
 	ImageView ivUserPicture;
 	NavigationView navigationView;
@@ -55,10 +56,6 @@ public class BaseNavigationDrawerActivity extends AppCompatActivity
 		drawerLayout.setDrawerListener(actionBarDrawerToggle);
 		actionBarDrawerToggle.syncState();
 
-
-
-		//ImageView ivUserPicture = (ImageView)drawerLayout.findViewById(R.id.ivUserPicture);
-		//ivUserPicture.setImageDrawable(getResources().getDrawable(R.drawable.com_facebook_profile_picture_blank_square));
 
 		//NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		//navigationView.setNavigationItemSelectedListener(this);
@@ -93,7 +90,7 @@ public class BaseNavigationDrawerActivity extends AppCompatActivity
 	public  void  setUserProfile(String jsondata){
 		Firebase firebase = ApplicationMy.getFirebase();
 		AuthData authData= firebase.getAuth();
-		LogUtil.e(firebase.getAuth()+"");
+		LogUtil.e(firebase.getAuth() + "");
 		try {
 			//response = new JSONObject(jsondata);
 			//tvUserEmail.setText(response.get("email").toString());
@@ -153,7 +150,7 @@ public class BaseNavigationDrawerActivity extends AppCompatActivity
 		int id = item.getItemId();
 
 		if (id == R.id.nav_camera) {
-			// Handle the camera action
+			
 		} else if (id == R.id.nav_gallery) {
 
 		} else if (id == R.id.nav_slideshow) {
@@ -162,12 +159,30 @@ public class BaseNavigationDrawerActivity extends AppCompatActivity
 
 		} else if (id == R.id.nav_share) {
 
-		} else if (id == R.id.nav_send) {
+		} else if (id == R.id.navigation_drawer_logout) {
+			logout();
+			Intent intent = new Intent(BaseNavigationDrawerActivity.this , LoginActivity.class);
+			startActivity(intent);
+			finish();
 
 		}
 
 		DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawerLayout.closeDrawer(GravityCompat.START);
 		return true;
+	}
+
+	private void logout() {
+		Firebase firebase = ApplicationMy.getFirebase();
+		AuthData authData = firebase.getAuth();
+		if (authData != null) {
+            /* logout of Firebase */
+			firebase.unauth();
+            /* Logout of any of the Frameworks. This step is optional, but ensures the user is not logged into Facebook/Google+ after logging out of Firebase. */
+			if (authData.getProvider().equals("facebook")) {
+                /* Logout from Facebook */
+				LoginManager.getInstance().logOut();
+			}
+		}
 	}
 }
