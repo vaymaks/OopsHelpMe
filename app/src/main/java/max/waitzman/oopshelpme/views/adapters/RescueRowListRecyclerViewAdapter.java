@@ -44,11 +44,14 @@ public class RescueRowListRecyclerViewAdapter extends RecyclerView.Adapter<Rescu
 
 		/**
 		 * Called when a view has been clicked.
-		 *
 		 * @param v The view that was clicked.
 		 */
 		@Override
 		public void onClick(View v) {
+			int position = getLayoutPosition(); // gets item position
+			//User user = users.get(position);
+			// We can access the data within the views
+			//Toast.makeText(context, tvName.getText(), Toast.LENGTH_SHORT).show();
 			clickListener.onItemClick(getPosition(), v);
 		}
 	}

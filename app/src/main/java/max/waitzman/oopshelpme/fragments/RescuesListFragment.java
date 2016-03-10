@@ -1,5 +1,6 @@
 package max.waitzman.oopshelpme.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.List;
 import max.waitzman.oopshelpme.R;
 import max.waitzman.oopshelpme.models.Rescue;
 import max.waitzman.oopshelpme.utils.LogUtil;
+import max.waitzman.oopshelpme.views.MyViews.DividerItemDecoration;
 import max.waitzman.oopshelpme.views.adapters.RescueRowListRecyclerViewAdapter;
 
 /**
@@ -126,6 +128,16 @@ public class RescuesListFragment extends Fragment {
 		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+		RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL_LIST);
+		//RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL_LIST);
+		mRecyclerView.addItemDecoration(itemDecoration);
+
+		// Code to Add an item with default animation
+		//((MyRecyclerViewAdapter) mAdapter).addItem(obj, index);
+
+		// Code to remove an item with default animation
+		//((MyRecyclerViewAdapter) mAdapter).deleteItem(index);
+
 		progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 		progressBar.setVisibility(View.VISIBLE);
 
@@ -150,10 +162,21 @@ public class RescuesListFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
 
-
 		// Downloading data from below url
 		final String url = "http://javatechig.com/?json=get_recent_posts&count=45";
 		new AsyncHttpTask().execute(url);
+
+	}
+
+	/**
+	 * Called when the fragment is visible to the user and actively running.
+	 * This is generally
+	 * tied to {@link Activity#onResume() Activity.onResume} of the containing
+	 * Activity's lifecycle.
+	 */
+	@Override
+	public void onResume() {
+		super.onResume();
 
 	}
 
@@ -249,6 +272,15 @@ public class RescuesListFragment extends Fragment {
 			if (result == 1) {
 				rescueRowListRecyclerViewAdapter = new RescueRowListRecyclerViewAdapter(getContext(), rescuesList);
 				mRecyclerView.setAdapter(rescueRowListRecyclerViewAdapter);
+
+
+				rescueRowListRecyclerViewAdapter.setOnItemClickListener(new
+						                                                        RescueRowListRecyclerViewAdapter.ClickListener() {
+							                                                        @Override
+							                                                        public void onItemClick(int position, View v) {
+								                                                        LogUtil.e(" Clicked on Item " + position);
+							                                                        }
+						                                                        });
 			} else {
 				Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
 			}
