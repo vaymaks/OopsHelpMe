@@ -2,6 +2,7 @@ package max.waitzman.oopshelpme.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import java.util.List;
 
 import max.waitzman.oopshelpme.ApplicationMy;
 import max.waitzman.oopshelpme.R;
+import max.waitzman.oopshelpme.activities.MyRescueActivity;
 import max.waitzman.oopshelpme.models.Rescue;
 import max.waitzman.oopshelpme.utils.LogUtil;
 import max.waitzman.oopshelpme.views.MyViews.DividerItemDecoration;
@@ -200,6 +202,8 @@ public class RescuesListFragment extends Fragment {
 																								@Override
 																								public void onItemClick(int position, View v) {
 																									LogUtil.e(" Clicked on Item " + position);
+																									Intent intent = new Intent(getActivity(), MyRescueActivity.class);
+																									startActivity(intent);
 																								}
 																							});
 						} else {

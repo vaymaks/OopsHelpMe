@@ -1,19 +1,20 @@
-package max.waitzman.oopshelpme.activities;
+package max.waitzman.oopshelpme.fragments;
 
 import android.Manifest;
-import android.app.FragmentManager;
+import android.app.Activity;
+//import android.app.Fragment;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.FrameLayout;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,8 +24,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -32,15 +34,32 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 
 import max.waitzman.oopshelpme.R;
-import max.waitzman.oopshelpme.fragments.RescueDetailsFragment;
 import max.waitzman.oopshelpme.utils.LogUtil;
 
-public class MyRescueActivity extends AppCompatActivity
-        //implements
-        //OnMapReadyCallback,
-        //GoogleApiClient.ConnectionCallbacks,
-        //GoogleApiClient.OnConnectionFailedListener
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link RescueDetailsFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link RescueDetailsFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class RescueDetailsFragment extends Fragment
+        implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener
 {
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+
+    MapView mapView;
 
     private GoogleMap mMap;
     private String provider;
@@ -63,94 +82,115 @@ public class MyRescueActivity extends AppCompatActivity
      */
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    private static final int CONTENT_VIEW_ID = 10101010;
+
+
+
+
+    public RescueDetailsFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment RescueDetailsFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static RescueDetailsFragment newInstance(String param1, String param2) {
+        RescueDetailsFragment fragment = new RescueDetailsFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_rescue);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
-        // Check that the activity is using the layout version with
-        // the fragment_container FrameLayout
-        if (findViewById(R.id.content_frame) != null) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
 
-            // However, if we're being restored from a previous state,
-            // then we don't need to do anything and should return or else
-            // we could end up with overlapping fragments.
-            if (savedInstanceState != null) {
-                return;
-            }
+        View rootView= inflater.inflate(R.layout.fragment_rescue_details, container, false);
 
-            // Create a new Fragment to be placed in the activity layout
-            //HeadlinesFragment firstFragment = new HeadlinesFragment();
+        mapView = (MapView) rootView.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
 
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            //firstFragment.setArguments(getIntent().getExtras());
+        return rootView;
+    }
 
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, RescueDetailsFragment.newInstance("","")).commit();
+    /**
+     * Called when the fragment's activity has been created and this
+     * fragment's view hierarchy instantiated.  It can be used to do final
+     * initialization once these pieces are in place, such as retrieving
+     * views or restoring state.  It is also useful for fragments that use
+     * {@link #setRetainInstance(boolean)} to retain their instance,
+     * as this callback tells the fragment when it is fully associated with
+     * the new activity instance.  This is called after {@link #onCreateView}
+     * and before {@link #onViewStateRestored(Bundle)}.
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     *                           a previous saved state, this is the state.
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        MapsInitializer.initialize(getActivity());
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            //  mMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
+            //mMap=m.getMap();
+            mapView.getMapAsync(this);
         }
 
-        /*if (savedInstanceState == null) {
-            RescueDetailsFragment newFragment = new RescueDetailsFragment();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add( newFragment, null).commit();
-        }*/
-
-        /*FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.content_frame, RescueDetailsFragment.newInstance("",""), "RescueDetailsFragment");
-        fragmentTransaction.commit();*/
-
-        //setContentView( );
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        //SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-       // mapFragment.getMapAsync(this);
-
-
         // First we need to check availability of play services
-        //if (checkPlayServices()) {
+        if (checkPlayServices()) {
 
             // Building the GoogleApi client
-            //buildGoogleApiClient();
-        //}
+            buildGoogleApiClient();
+        }
 
     }
 
-
-    /**
-     * Creating google api client object
-     *
     protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API).build();
     }
 
-    *
+    /**
      * Method to verify google play services on the device
-     *
+     * */
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil
-                .isGooglePlayServicesAvailable(this);
+                .isGooglePlayServicesAvailable(getActivity());
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
+                GooglePlayServicesUtil.getErrorDialog(resultCode, getActivity(), CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
             } else {
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(getActivity(),
                         "This device is not supported.", Toast.LENGTH_LONG)
                         .show();
-                finish();
+                getActivity().finish();
             }
             return false;
         }
         return true;
     }
 
-    *
+    /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
@@ -158,7 +198,7 @@ public class MyRescueActivity extends AppCompatActivity
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
-
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -171,7 +211,7 @@ public class MyRescueActivity extends AppCompatActivity
         //LatLng sydney = new LatLng(-34, 151);
         // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        /*String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             ActivityCompat.requestPermissions(this, permissions, (int) 7);
@@ -183,12 +223,12 @@ public class MyRescueActivity extends AppCompatActivity
             return;
         } else {
             //markLocation();
-        }
+        }*/
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        LogUtil.e(requestCode +" "+permissions+" " + grantResults);
+        LogUtil.e(requestCode + " " + permissions + " " + grantResults);
         markLocation();
     }
 
@@ -215,7 +255,7 @@ public class MyRescueActivity extends AppCompatActivity
 
 
     private void markLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             location = mLocationCurrent;
             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
             if (mMap != null) {
@@ -234,20 +274,20 @@ public class MyRescueActivity extends AppCompatActivity
         // Once connected with google api, get the location
         displayLocation();
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             mLocationCurrent = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
 
         initCamera(mLocationCurrent);
-        markLocation();
+        markLocation();*/
     }
 
-    *
+    /**
      * Method to display the location on UI
-     *
+     * */
     private void displayLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -261,7 +301,7 @@ public class MyRescueActivity extends AppCompatActivity
         initCamera(mLocationCurrent);
         markLocation();
 
-
+        /*
         if (mLastLocation != null) {
             double latitude = mLastLocation.getLatitude();
             double longitude = mLastLocation.getLongitude();
@@ -270,7 +310,7 @@ public class MyRescueActivity extends AppCompatActivity
 
         } else {
             LogUtil.e("Couldn't get the location. Make sure location is enabled on the device");
-        }
+        }*/
     }
 
     private void initCamera( Location location ) {
@@ -285,7 +325,7 @@ public class MyRescueActivity extends AppCompatActivity
     }
 
     private String getAddressFromLatLng( LatLng latLng ) {
-        Geocoder geocoder = new Geocoder( this );
+        Geocoder geocoder = new Geocoder( getContext() );
 
         String address = "";
         try {
@@ -296,16 +336,11 @@ public class MyRescueActivity extends AppCompatActivity
         return address;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        checkPlayServices();
-    }
 
-    *
+    /**
      * Google api callback methods
-
+     */
     @Override
     public void onConnectionFailed(ConnectionResult connection) {
         LogUtil.e("Connection failed: ConnectionResult.getErrorCode() = " + connection.getErrorCode());
@@ -317,7 +352,8 @@ public class MyRescueActivity extends AppCompatActivity
         LogUtil.e("");
         mGoogleApiClient.connect();
     }
-*/
+
+
     /*public String toString() {
         // Build a GoogleApiClient with access to the Google Sign-In API and the
             // options specified by gso.
@@ -326,4 +362,86 @@ public class MyRescueActivity extends AppCompatActivity
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
     }*/
+
+    /**
+     * Called when the fragment is visible to the user and actively running.
+     * This is generally
+     * tied to {@link Activity#onResume() Activity.onResume} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+        checkPlayServices();
+    }
+
+
+    /**
+     * Called when the Fragment is no longer resumed.  This is generally
+     * tied to {@link Activity#onPause() Activity.onPause} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    /**
+     * Called when the fragment is no longer in use.  This is called
+     * after {@link #onStop()} and before {@link #onDetach()}.
+     */
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+
+    private OnFragmentInteractionListener mListener;
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        /*if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }*/
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
 }

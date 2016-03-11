@@ -22,6 +22,7 @@ import java.util.List;
 import max.waitzman.oopshelpme.ApplicationMy;
 import max.waitzman.oopshelpme.R;
 import max.waitzman.oopshelpme.fragments.ProfileFragment;
+import max.waitzman.oopshelpme.fragments.RescueDetailsFragment;
 import max.waitzman.oopshelpme.fragments.RescuesListFragment;
 import max.waitzman.oopshelpme.models.Rescue;
 
@@ -41,11 +42,7 @@ public class MainApplicationActivity extends AppCompatActivity { // BaseNavigati
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private int[] tabIcons = {
-            R.drawable.ic_tab_profile,
-            R.drawable.ic_tab_rescue_in_production,
-            R.drawable.ic_tab_rescue_new
-    };
+
 
 
     /**
@@ -225,18 +222,26 @@ public class MainApplicationActivity extends AppCompatActivity { // BaseNavigati
             return mFragmentTitleList.get(position);
         }
     }
-
+    private int[] tabIcons = {
+            R.drawable.ic_tab_rescue_new,
+            R.drawable.ic_tab_rescue_in_production,
+            R.drawable.ic_tab_rescue_my,
+            R.drawable.ic_tab_profile
+    };
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(3).setIcon(tabIcons[3]);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(ProfileFragment.newInstance("",""), "profile");
-        adapter.addFrag(RescuesListFragment.newInstance(2), "rescue");
-        adapter.addFrag(RescuesListFragment.newInstance(3), "rescue");
+
+        adapter.addFrag(RescuesListFragment.newInstance(2), null);
+        adapter.addFrag(RescuesListFragment.newInstance(3), null);
+        adapter.addFrag(RescueDetailsFragment.newInstance("",""), null);
+        adapter.addFrag(ProfileFragment.newInstance("",""), null);
         viewPager.setAdapter(adapter);
     }
 
