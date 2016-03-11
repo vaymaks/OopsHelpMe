@@ -1,0 +1,98 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF">
+        <ImageView
+            android:id="@+id/car"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/car"
+            android:layout_margin="16dp"/>
+        <TextView
+            android:id="@+id/tvCarModel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mazda 3"
+            android:textSize="14sp"
+            android:textColor="#1F1F1E"
+            android:gravity="left"
+            android:background="#FFFFFF"
+            android:padding="4dp"
+            android:layout_margin="16dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="#D1D2D4"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF">
+        <ImageView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/description"
+            android:layout_margin="16dp"/>
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Deep deep in the mud"
+            android:textSize="14sp"
+            android:textColor="#1F1F1E"
+            android:gravity="left"
+            android:background="#FFFFFF"
+            android:layout_margin="16dp"
+            android:padding="4dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="#D1D2D4"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF">
+        <ImageView
+            android:id="@+id/location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/description"
+            android:layout_margin="16dp"/>
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Yarkon River"
+            android:textSize="14sp"
+            android:textColor="#1F1F1E"
+            android:gravity="left"
+            android:background="#FFFFFF"
+            android:layout_margin="16dp"
+            android:padding="4dp"/>
+    </LinearLayout>
+
+    <fragment
+       android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MyRescueActivity"
+        tools:layout="@layout/activity_my_rescue" />
+</LinearLayout>

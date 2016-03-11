@@ -130,6 +130,15 @@ public class RescuesActivity extends AppCompatActivity { // BaseNavigationDrawer
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             return RescuesListFragment.newInstance(position + 1);
+            /*switch (position) {
+                case 0:
+                    //return RescuesListFragment.newInstance(position + 1);
+                case 1:
+                    //return new FragmentPicture();
+                case 2:
+                    //return new FragmentSettings();
+
+            }*/
         }
 
         @Override

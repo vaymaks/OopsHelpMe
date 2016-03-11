@@ -9,12 +9,12 @@ import java.util.Date;
  * Created by User7 on 06/03/2016.
  */
 public class Rescue implements Parcelable {
-	private String title;
-	private String description;
-	private Location location;
-	private Date date;
-	private User stuckUser;
-	private User extractorUser;
+	private String title="";
+	private String description="";
+	private Location location=new Location(0f,0f);
+	private Date date = new Date();
+	private User stuckUser= new User();
+	private User extractorUser=new User();
 
 	public Rescue() {
 	}

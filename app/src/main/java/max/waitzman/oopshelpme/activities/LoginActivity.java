@@ -14,9 +14,11 @@ import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 
+import max.waitzman.oopshelpme.ApplicationMy;
 import max.waitzman.oopshelpme.R;
 import max.waitzman.oopshelpme.models.Analytics;
 import max.waitzman.oopshelpme.models.Car;
+import max.waitzman.oopshelpme.models.Rescue;
 import max.waitzman.oopshelpme.models.User;
 import max.waitzman.oopshelpme.utils.LogUtil;
 
@@ -367,7 +369,6 @@ import com.firebase.client.FirebaseError;
 //import com.google.android.gms.plus.Plus;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -756,7 +757,11 @@ public class LoginActivity extends AppCompatActivity
 				//locationProfileStringStringMap.get("name");
 				//cachedUserProfileStringStringMap.get("location").get("name");
 
-				Intent intent = new Intent(LoginActivity.this, BaseNavigationDrawerActivity.class);
+				/*Intent intent = new Intent(LoginActivity.this, BaseNavigationDrawerActivity.class);
+				startActivity(intent);
+				finish();*/
+
+				Intent intent = new Intent(LoginActivity.this, MainApplicationActivity.class);
 				startActivity(intent);
 				finish();
 
@@ -824,7 +829,11 @@ public class LoginActivity extends AppCompatActivity
 			cachedUserProfileStringStringMap.get("location");//address
 			cachedUserProfileStringObjectMap.get("location");//address
 			Map<String,Object> locationStringStringMap = (Map<String,Object>)cachedUserProfileStringObjectMap.get("location");//address
-			locationStringStringMap.get("name");
+
+			String adress="None";
+			if (locationStringStringMap!=null) {
+				adress=(String)locationStringStringMap.get("name");
+			}
 			//car
 			//userType
 			cachedUserProfileStringStringMap.get("cover");
@@ -837,13 +846,20 @@ public class LoginActivity extends AppCompatActivity
 			user.setEmail((String) authData.getProviderData().get("email"));
 			user.setProfileImageURL((String) authData.getProviderData().get("profileImageURL"));
 			user.setFacebookProfileURL((String) cachedUserProfileStringStringMap.get("link"));
-			user.setAddress( (String)(((Map<String,Object>)cachedUserProfileStringStringMap.get("location")).get("name"))  );
+			user.setAddress( adress  );
 			user.setCar(new Car());
 			user.setAnalytics(new Analytics());
 			user.setUserType(User.UserType.Regular);
 
 			//mFirebaseRef.child("users").child(authData.getUid()).setValue(map);
 			mFirebaseRef.child("users").child(authData.getUid()).setValue(user);
+
+			/*Rescue rescue = new Rescue();
+			rescue.setExtractorUser(user);
+			rescue.setStuckUser(user);
+			rescue.setDescription("tralala");
+			ApplicationMy.getFirebase().child("rescues").push().setValue(rescue );*/
+
 		}
 
 		@Override
