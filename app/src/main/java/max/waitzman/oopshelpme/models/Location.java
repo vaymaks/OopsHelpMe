@@ -17,6 +17,9 @@ public class Location implements Comparator<Location>,Parcelable {
         this.setLongitude(longitude);
     }
 
+    public Location() {
+
+    }
 
     public double getLatitude() {
         return latitude;

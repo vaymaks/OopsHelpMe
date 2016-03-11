@@ -32,6 +32,14 @@ public class RescueRowListRecyclerViewAdapter extends RecyclerView.Adapter<Rescu
 		protected TextView title;
 		//protected TextView description;
 
+		//protected ImageView ivUserPicture;
+		//protected TextView title;
+		protected TextView location;
+		protected TextView description;
+		protected TextView TimeCaunterHours;
+		protected TextView Extractor_User_name;
+		protected ImageView extractorUser_picture;
+
 
 
 		public CustomViewHolder(View itemView) {
@@ -39,7 +47,16 @@ public class RescueRowListRecyclerViewAdapter extends RecyclerView.Adapter<Rescu
 			this.ivUserPicture = (ImageView) itemView.findViewById(R.id.ivUserPicture);
 			this.title = (TextView) itemView.findViewById(R.id.title);
 			//this.description = (TextView) view.findViewById(R.id.description);
+			this.location=(TextView) itemView.findViewById(R.id.MapPlaceText);
+			this.description=(TextView) itemView.findViewById(R.id.Description);
+			this.TimeCaunterHours=(TextView) itemView.findViewById(R.id.TimeCaunterHours);
+			this.Extractor_User_name=(TextView) itemView.findViewById(R.id.Extractor_User_name);
+			this.extractorUser_picture=(ImageView) itemView.findViewById(R.id.extractorUser_picture);
+
 			itemView.setOnClickListener(this);
+
+
+
 		}
 
 		/**
@@ -78,13 +95,26 @@ public class RescueRowListRecyclerViewAdapter extends RecyclerView.Adapter<Rescu
 		Rescue rescueItem = rescuesList.get(i);
 
 		//Download image using picasso library
-		Picasso.with(mContext).load(rescueItem.getDescription())
+		Picasso.with(mContext).load(rescueItem.getStuckUser().getProfileImageURL())
 				.error(R.drawable.ic_menu_camera)
 				.placeholder(R.drawable.ic_menu_camera)
 				.into(customViewHolder.ivUserPicture);
 
 		//Setting text view title
 		customViewHolder.title.setText(rescueItem.getTitle());
+
+		//customViewHolder.title = (TextView) itemView.findViewById(R.id.title);
+		//customViewHolder.location=(TextView) itemView.findViewById(R.id.MapPlaceText);
+		customViewHolder.description.setText(rescueItem.getDescription());
+		customViewHolder.TimeCaunterHours.setText("8:00");
+		customViewHolder.Extractor_User_name.setText(rescueItem.getExtractorUser().getFirstName() + " " + rescueItem.getExtractorUser().getLastName());
+
+		Picasso.with(mContext).load(rescueItem.getStuckUser().getProfileImageURL())
+				.error(R.drawable.ic_menu_camera)
+				.placeholder(R.drawable.ic_menu_camera)
+				.into(customViewHolder.extractorUser_picture);
+
+
 	}
 
 	public void addItem(Rescue rescueItem, int index) {

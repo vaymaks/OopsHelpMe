@@ -7,12 +7,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import max.waitzman.oopshelpme.ApplicationMy;
 import max.waitzman.oopshelpme.R;
 import max.waitzman.oopshelpme.models.Rescue;
 import max.waitzman.oopshelpme.utils.LogUtil;
@@ -163,8 +170,51 @@ public class RescuesListFragment extends Fragment {
 
 
 		// Downloading data from below url
-		final String url = "http://javatechig.com/?json=get_recent_posts&count=45";
-		new AsyncHttpTask().execute(url);
+		//final String url = "http://javatechig.com/?json=get_recent_posts&count=45";
+		//new AsyncHttpTask().execute(url);
+
+
+		//// read from firebase////
+
+		Firebase ref = ApplicationMy.getFirebase();
+		ref.child("rescues").
+				addValueEventListener(new ValueEventListener() {
+					@Override
+					public void onDataChange(DataSnapshot snapshot) {
+						System.out.println(snapshot.getValue());
+						rescuesList = new ArrayList<Rescue>();
+						for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+							Rescue post = postSnapshot.getValue(Rescue.class);
+							Log.e("rescue !!!!!!!", post + "");
+							rescuesList.add(post);
+						}
+
+						progressBar.setVisibility(View.GONE);
+						if (rescuesList.size() >= 1) {
+							rescueRowListRecyclerViewAdapter = new RescueRowListRecyclerViewAdapter(getContext(), rescuesList);
+							mRecyclerView.setAdapter(rescueRowListRecyclerViewAdapter);
+
+
+							rescueRowListRecyclerViewAdapter.setOnItemClickListener(new
+																							RescueRowListRecyclerViewAdapter.ClickListener() {
+																								@Override
+																								public void onItemClick(int position, View v) {
+																									LogUtil.e(" Clicked on Item " + position);
+																								}
+																							});
+						} else {
+							Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+						}
+					}
+
+
+					@Override
+					public void onCancelled(FirebaseError firebaseError) {
+						System.out.println("The read failed: " + firebaseError.getMessage());
+					}
+
+				});
+
 
 	}
 

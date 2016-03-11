@@ -9,9 +9,12 @@ import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,16 +27,35 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 
 import max.waitzman.oopshelpme.R;
+import max.waitzman.oopshelpme.utils.LogUtil;
 
-public class MyRescueActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MyRescueActivity extends FragmentActivity
+        implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap;
-    private LocationManager service;
     private String provider;
     private Location location;
 
     private GoogleApiClient mGoogleApiClient;
     private Location mLocationCurrent;
+
+    // boolean flag to toggle periodic location updates
+    private boolean mRequestingLocationUpdates = false;
+
+    private LocationRequest locationRequest;
+    private long UPDATE_INTERVAL = 60000;  /* 60 secs */
+    private long FASTEST_INTERVAL = 5000; /* 5 secs */
+    private static int DISPLACEMENT = 10; // 10 meters
+
+    /*
+     * Define a request code to send to Google Play services This code is
+     * returned in Activity.onActivityResult
+     */
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,14 +65,46 @@ public class MyRescueActivity extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder( this)
-                .addConnectionCallbacks( this )
-                .addOnConnectionFailedListener( this )
-                .addApi( LocationServices.API )
-                .build();
+        // First we need to check availability of play services
+        if (checkPlayServices()) {
+
+            // Building the GoogleApi client
+            buildGoogleApiClient();
+        }
 
     }
 
+
+
+    /**
+     * Creating google api client object
+     * */
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
+    }
+
+    /**
+     * Method to verify google play services on the device
+     * */
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 
     /**
      * Manipulates the map once available.
@@ -65,12 +119,11 @@ public class MyRescueActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
         // Add a marker in Sydney and move the camera
         //LatLng sydney = new LatLng(-34, 151);
         // mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        service = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        provider = service.getBestProvider(criteria, false);
+
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -81,8 +134,9 @@ public class MyRescueActivity extends FragmentActivity implements OnMapReadyCall
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             return;
-        } else
-            markLocation();
+        } else {
+            //markLocation();
+        }
     }
 
     @Override
@@ -112,8 +166,6 @@ public class MyRescueActivity extends FragmentActivity implements OnMapReadyCall
     }
 
 
-
-
     private void markLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             //location = service.getLastKnownLocation(provider);
@@ -131,13 +183,41 @@ public class MyRescueActivity extends FragmentActivity implements OnMapReadyCall
 
     @Override
     public void onConnected(Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        LogUtil.e("");
+        // Once connected with google api, get the location
+        displayLocation();
+
+        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
             mLocationCurrent = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
 
         initCamera(mLocationCurrent);
+        markLocation();*/
+    }
+
+    /**
+     * Method to display the location on UI
+     * */
+    private void displayLocation() {
+
+
+
+        mLocationCurrent = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        initCamera(mLocationCurrent);
         markLocation();
+
+        /*
+        if (mLastLocation != null) {
+            double latitude = mLastLocation.getLatitude();
+            double longitude = mLastLocation.getLongitude();
+
+            lblLocation.setText(latitude + ", " + longitude);
+
+        } else {
+            LogUtil.e("Couldn't get the location. Make sure location is enabled on the device");
+        }*/
     }
 
     private void initCamera( Location location ) {
@@ -148,8 +228,7 @@ public class MyRescueActivity extends FragmentActivity implements OnMapReadyCall
                 .tilt( 0.0f )
                 .build();
 
-        mMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(position), null);
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), null);
 
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.setTrafficEnabled(true);
@@ -170,13 +249,25 @@ public class MyRescueActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
+    protected void onResume() {
+        super.onResume();
+
+        checkPlayServices();
+    }
+
+    /**
+     * Google api callback methods
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult connection) {
+        LogUtil.e("Connection failed: ConnectionResult.getErrorCode() = " + connection.getErrorCode());
 
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
+    public void onConnectionSuspended(int arg0) {
+        LogUtil.e("");
+        mGoogleApiClient.connect();
     }
 
 

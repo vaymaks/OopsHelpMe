@@ -2,6 +2,123 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:layout_margin="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="150dp">
+
+        <ImageView
+            android:id="@+id/ivUserPicture"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_menu_camera"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+        <!--android:src="@drawable/placeholder"-->
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Hours_Caunter"
+            android:id="@+id/TimeCaunterHours"
+            android:layout_marginRight="34dp"
+            android:layout_marginEnd="34dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ivUserPicture"
+            android:layout_alignBottom="@+id/ivUserPicture"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/linearLayout">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:padding="8dp"
+                    android:text="Need to be rescue"
+                    android:textColor="#222"
+                    android:textSize="15sp"
+                    android:layout_above="@+id/Description" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="place"
+                    android:id="@+id/MapPlaceText"
+                    android:layout_marginStart="5sp"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/rescue_description"
+                android:id="@+id/Description"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/ivUserPicture"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ivUserPicture"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/extractorUser_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_menu_camera"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/extractorUser_name"
+                android:textColor="#222"
+                android:textSize="15sp"
+                android:layout_above="@+id/Description"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/Extractor_User_name" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
+
+<!--
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="80dp"
     android:layout_margin="8dp">
     <RelativeLayout
@@ -16,7 +133,7 @@
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_menu_camera" />
-        <!--android:src="@drawable/placeholder"-->
+        &lt;!&ndash;android:src="@drawable/placeholder"&ndash;&gt;
 
         <TextView
             android:id="@+id/title"
@@ -32,4 +149,4 @@
 
     </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+</android.support.v7.widget.CardView>-->
