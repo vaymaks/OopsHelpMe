@@ -45,7 +45,7 @@ public class RescueRowListRecyclerViewAdapter extends RecyclerView.Adapter<Rescu
 		public CustomViewHolder(View itemView) {
 			super(itemView);
 			this.ivUserPicture = (ImageView) itemView.findViewById(R.id.ivUserPicture);
-			this.title = (TextView) itemView.findViewById(R.id.title);
+			this.title = (TextView) itemView.findViewById(R.id.Name_of_rescure);
 			//this.description = (TextView) view.findViewById(R.id.description);
 			this.location=(TextView) itemView.findViewById(R.id.MapPlaceText);
 			this.description=(TextView) itemView.findViewById(R.id.Description);
@@ -101,7 +101,7 @@ public class RescueRowListRecyclerViewAdapter extends RecyclerView.Adapter<Rescu
 				.into(customViewHolder.ivUserPicture);
 
 		//Setting text view title
-		customViewHolder.title.setText(rescueItem.getTitle());
+		customViewHolder.title.setText(rescueItem.getStuckUser().getFirstName()+" "+rescueItem.getStuckUser().getLastName());
 
 		//customViewHolder.title = (TextView) itemView.findViewById(R.id.title);
 		//customViewHolder.location=(TextView) itemView.findViewById(R.id.MapPlaceText);
